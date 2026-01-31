@@ -16,13 +16,13 @@ q_tables = {
     for agent in agents
 }
 
-env.close()
+# env.close()
 
 # 3) 하이퍼파라미터
-alpha        = 0.01    # 학습률
+alpha        = 0.05    # 학습률
 gamma        = 0.95    # 할인율
-epsilon      = 0.3     # 탐험률
-num_episodes = 100   # 학습 에피소드 수
+epsilon      = 0.2     # 탐험률
+num_episodes = 5000   # 학습 에피소드 수
 
 # 4) 상태(observation) -> Q-table 키 변환 함수
 def obs_to_key(obs, agent):
@@ -40,7 +40,7 @@ def choose_action(q_table, state_key, legal_actions, epsilon):
 
 # 6) Q-learning 학습 루프
 for ep in tqdm(range(1, num_episodes+1), desc="Q-learning Training"):
-    env = texas_holdem_v4.env()
+    # env = texas_holdem_v4.env()
     env.reset()
     flag=False
 
@@ -58,8 +58,8 @@ for ep in tqdm(range(1, num_episodes+1), desc="Q-learning Training"):
             # 이전 스텝에 대해 Q-learning 업데이트
             if prev[agent]["state"] is not None:
                 max_next_q = np.max([q_tables[agent][state_key][a] for a in legal]) if legal else 0
-                td_target  = None ### 여기를 바꿔주세요 ###
-                td_error   = None ### 여기를 바꿔주세요 ###
+                td_target  = reward + gamma * max_next_q ### 여기를 바꿔주세요 ###
+                td_error = td_target - q_tables[agent][prev[agent]["state"]][prev[agent]["action"]] ### 여기를 바꿔주세요 ###
                 q_tables[agent][prev[agent]["state"]][prev[agent]["action"]] += alpha * td_error
 
             # 현재 상태에서 행동 선택
@@ -72,8 +72,8 @@ for ep in tqdm(range(1, num_episodes+1), desc="Q-learning Training"):
         # 터미널 보상 업데이트 및 에피소드 종료
         if term or trunc:
             if prev[agent]["state"] is not None:
-                td_target = None ### 여기를 바꿔주세요 ###
-                td_error  = None ### 여기를 바꿔주세요 ###
+                td_target = reward ### 여기를 바꿔주세요 ###
+                td_error = td_target - q_tables[agent][prev[agent]["state"]][prev[agent]["action"]] ### 여기를 바꿔주세요 ###
                 q_tables[agent][prev[agent]["state"]][prev[agent]["action"]] += alpha * td_error
             if flag:
                 break
@@ -81,7 +81,7 @@ for ep in tqdm(range(1, num_episodes+1), desc="Q-learning Training"):
                 flag=True
         
 
-    env.close()
+env.close()
 
 # 7) 학습 결과 저장
 for agent in agents:

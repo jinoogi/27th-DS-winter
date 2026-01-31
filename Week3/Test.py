@@ -21,11 +21,11 @@ def wait_for_key():
         pygame.time.wait(10)  # CPU 사용량 줄이기
 
 # --- Q-테이블 파일 경로 (실제 경로로 수정) ---
-# PLAYER1_Q_PATH = 'texas_holdem_sarsa_4_player_1.pkl'
-# PLAYER0_Q_PATH = 'texas_holdem_sarsa_4_player_0.pkl'
+# PLAYER1_Q_PATH = 'texas_holdem_q_learning_player_1.pkl'
+PLAYER0_Q_PATH = 'texas_holdem_q_learning_player_0.pkl'
 
-PLAYER0_Q_PATH = './Agent/texas_holdem_sarsa_base_player_0.pkl'
-PLAYER1_Q_PATH = './Agent/texas_holdem_q_learning_base_player_1.pkl'
+PLAYER1_Q_PATH = 'Week3/Agent/texas_holdem_q_learning_base_player_1.pkl'
+# PLAYER0_Q_PATH = 'Week3/Agent/texas_holdem_sarsa_base_player_0.pkl'
 
 
 # --- 환경 참조해서 action_space 크기 가져오기 ---
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     for i in range(1, NUM_MATCHES + 1):
         is_last = (i == NUM_MATCHES)
         print(f"\n=== Match {i} 시작 {'(시각화)' if is_last else '(시뮬레이션)'} ===")
-        winner = play_match(INITIAL_STACK, render=is_last)
+        winner = play_match(INITIAL_STACK, render=False)
         results[winner] += 1
         print(f"=== Match {i} 결과: {winner} 승리 ===")
 
